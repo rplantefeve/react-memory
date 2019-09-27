@@ -5,11 +5,3 @@
   float: left;
   margin: 4px;
 }
-
-.image {
-  background-image: url("./cards.png");
-  background-color: #fff;
-  width: 100%;
-  height: 100%;
-  /*display: none;*/
-}

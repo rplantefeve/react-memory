@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import './Image.css'
+
 const Image = ({ position }) => (
   <div
     className='image'
