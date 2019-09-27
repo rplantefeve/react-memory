@@ -2,26 +2,34 @@ import React from 'react';
 import './App.css';
 
 import ProgressBar from './ProgressBar';
+import Card from './Card';
+
+import shuffle from 'lodash.shuffle';
+
+//Array of fruits images (background-position)
+const FRUITS =   [
+  '0 -100px',
+  '0 -200px',
+  '0 -300px',
+  '0 -400px',
+  '0 -500px',
+  '0 -600px',
+  '0 -700px',
+  '0 -800px',
+  '0 -900px',
+  '0 -1000px',
+  '0 -1100px',
+  '0 -1200px',
+  '0 -1300px',
+  '0 -1400px',
+];
+
+// Size of the array of fruits
+const SIZE = 28;
 /*
 var app = {
 
-  //Array of fruits images (background-position)
-  fruits : [
-    '0 -100px',
-    '0 -200px',
-    '0 -300px',
-    '0 -400px',
-    '0 -500px',
-    '0 -600px',
-    '0 -700px',
-    '0 -800px',
-    '0 -900px',
-    '0 -1000px',
-    '0 -1100px',
-    '0 -1200px',
-    '0 -1300px',
-    '0 -1400px',
-  ],
+  ,
 
   //A var to count the number of clicked cards
   clickedCard : 0,
@@ -40,45 +48,6 @@ var app = {
     //app.timer = setTimeout(app.gameOver, 5000);
     // Listen to the click on the cards
     $('.card').on('click', app.returnCard);
-  },
-
-  createCards : function () {
-    // Array of cards
-    var cards = [];
-
-    // Loops creating 14*2 card items (making the 14 pairs)
-    for (var x = 0; x < 14; ++x) {
-      for(var y = 0; y < 2; ++y) {
-
-      // Main div for each card
-        var card = $('<div>',{
-          class: 'card'
-        });
-
-      // When the cards are not clicked yet, they display a div element with the class "cache"
-        var hiddenCard = $('<div>',{
-          class: 'cache'
-        });
-      // When the cards will be clicked yet, they will display a div element with the class "image"
-        var visibleCard = $('<div>',{
-          class: 'image'
-        })
-        // Add to each pair a background-position related to the "x"nth pair they belong to
-        .css('background-position', app.fruits[x]);
-
-      // Append the 2 card faces to each main card item
-        card.append(hiddenCard);
-        card.append(visibleCard);
-
-      // Fill the array "cards" with the 28 items
-        cards.push(card);
-      }
-    }
-    //Mix the cards
-    app.shuffle(cards);
-
-    // Add the 28 generated cards to the DOM
-    $('main').append(cards);
   },
 
   //Hide "cache" class child-element and show the "image" class child-element of the clicked card
@@ -189,9 +158,60 @@ class App extends React.Component {
 
     this.state = {
       cards: this.generateCards(),
-      
+
       percentage: 0
     }
+  }
+
+  /*
+  Generate all the cards according to background positions.
+   */
+  generateCards(){
+    // tableau de cartes
+    const result = [];
+    // taille du tableau
+    const size = SIZE;
+    // mélanger les cartes
+    const candidates = shuffle(FRUITS);
+    // tant que le tableau n'est pas plein
+    while (result.length < size) {
+      const card = candidates.pop();
+      // insérer deux fois la carte
+      result.push(card, card);
+    }
+    return shuffle(result);
+    /*
+    // Array of cards
+    var cards = [];
+
+
+      // Main div for each card
+        var card = $('<div>',{
+          class: 'card'
+        });
+
+      // When the cards are not clicked yet, they display a div element with the class "cache"
+        var hiddenCard = $('<div>',{
+          class: 'cache'
+        });
+      // When the cards will be clicked yet, they will display a div element with the class "image"
+        var visibleCard = $('<div>',{
+          class: 'image'
+        })
+        // Add to each pair a background-position related to the "x"nth pair they belong to
+        .css('background-position', app.fruits[x]);
+
+      // Append the 2 card faces to each main card item
+        card.append(hiddenCard);
+        card.append(visibleCard);
+
+      // Fill the array "cards" with the 28 items
+        cards.push(card);
+*/
+  }
+
+  getFeedbackForCard(index){
+    return 'visible';
   }
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
@@ -205,10 +225,23 @@ class App extends React.Component {
   }
 
   render () {
+    // destruct
+    const { cards, percentage } = this.state;
     return (
-      <div className="memory">
-        <ProgressBar percentage={this.state.percentage} />
-      </div>
+      <>
+        <main>
+          {cards.map((card, index) => (
+            <Card
+              key={index}
+              card={card}
+              feedback={this.getFeedbackForCard(index)}
+              index={index}
+              onClick={this.handleCardClicked}
+            />
+          ))}
+        </main>
+        <ProgressBar percentage={percentage} />
+      </>
     )
   }
 }
