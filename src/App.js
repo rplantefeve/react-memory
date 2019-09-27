@@ -37,6 +37,7 @@ class App extends React.Component {
       percentage: 0,
       currentPair: [],
       matchedPairs: [],
+      timeOut: false,
     }
   }
 
@@ -98,7 +99,6 @@ class App extends React.Component {
     } else {
       return ;
     }
-
   }
 
   handleNewPair(index){
@@ -120,19 +120,31 @@ class App extends React.Component {
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
   componentDidMount(){
-    // ajout d'un interval
-    setInterval(() => {
-      this.setState(prevState => ({
-          percentage: prevState.percentage + 1
-        }));
-    }, 1000);
+      // ajout d'un interval
+      this.setState({intervalId : (
+        setInterval(() => {
+          const newPercentage = this.state.percentage + 10;
+          console.log(newPercentage);
+          if(newPercentage < 100){
+            this.setState(prevState => ({
+                percentage: newPercentage
+              }))
+          } else {
+            debugger;
+            clearInterval(this.state.intervalId);
+            this.setState({ timeOut : true });
+          }
+        }, 1000)
+      )
+    });
   }
 
   render () {
     // destruct
-    const { cards, percentage } = this.state;
+    const { cards, percentage, timeOut } = this.state;
     return (
       <>
+        { timeOut && <p>Perdu !</p> }
         <main>
           {cards.map((position, index) => (
             <Card
