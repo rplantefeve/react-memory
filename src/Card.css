@@ -6,21 +6,10 @@
   margin: 4px;
 }
 
-.cache {
-  background-color: #888;
-  width: 100%;
-  height: 100%;
-}
-
-.cache:hover {
-  background-color: #696969;
-  cursor: pointer;
-}
-
 .image {
   background-image: url("./cards.png");
   background-color: #fff;
   width: 100%;
   height: 100%;
-  display: none;
+  /*display: none;*/
 }

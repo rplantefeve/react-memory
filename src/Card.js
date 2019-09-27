@@ -1,30 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Cache from './Cache';
+import Image from './Image';
+
 import './Card.css';
 
-// card : backgroundPosition. feedback = état d'affichage du symbole
-const Card = ({card, feedback, onClick, index}) => (
-  <div className='card'>
-    <div className='cache'></div>
-    <div
-      className={`image ${feedback}`}
-      style={{ backgroundPosition: card }}
-      onClick={()=>onClick(index)}
-    >
+const VISUAL_PAUSE_MSECS = 750;
+
+
+class Card extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      card: props.card,
+      feedback: props.feedback,
+    }
+  }
+
+  // arrow fx for binding
+  onClick = () => {
+    this.setState({feedback: 'visible'});
+    // puis invisible
+    setTimeout(() => this.setState({feedback: 'cache'}), VISUAL_PAUSE_MSECS);
+  }
+
+  render () {
+    // destruct
+    const { card, feedback } = this.state;
+    return (
+      <div className='card' onClick={this.onClick}>
+      { feedback === 'visible' ? (
+        <Image position={card} />
+      ) : (
+        <Cache />
+      )}
     </div>
-  </div>
-);
+    )
+  }
+}
 
 Card.propTypes = {
   card : PropTypes.string.isRequired,
-  onClick : PropTypes.func.isRequired,
   feedback : PropTypes.oneOf([
-    'card_revealed',
     'cache',
-    'image',
+    'visible',
   ]).isRequired,
-  index : PropTypes.number.isRequired,
 };
 
 export default Card;

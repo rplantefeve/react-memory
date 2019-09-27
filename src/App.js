@@ -125,27 +125,7 @@ var app = {
     app.resetGame();
   },
 
-  resetGame : function () {
-    //Reload page to restart a new game and the progess-bar from 0
-    window.location.reload(true);
-  },
 
-  //Shuffle an array passed in the function
-  shuffle : function (array) {
-    var counter = array.length;
-    // While there are elements in the array
-    while (counter > 0) {
-        // Pick a random index
-      var index = Math.floor(Math.random() * counter);
-        // Decrease counter by 1
-      counter--;
-        // And swap the last element with it
-      var temp = array[counter];
-      array[counter] = array[index];
-      array[index] = temp;
-    }
-    return array;
-  },
 
 };
 
@@ -158,7 +138,6 @@ class App extends React.Component {
 
     this.state = {
       cards: this.generateCards(),
-
       percentage: 0
     }
   }
@@ -180,38 +159,19 @@ class App extends React.Component {
       result.push(card, card);
     }
     return shuffle(result);
-    /*
-    // Array of cards
-    var cards = [];
-
-
-      // Main div for each card
-        var card = $('<div>',{
-          class: 'card'
-        });
-
-      // When the cards are not clicked yet, they display a div element with the class "cache"
-        var hiddenCard = $('<div>',{
-          class: 'cache'
-        });
-      // When the cards will be clicked yet, they will display a div element with the class "image"
-        var visibleCard = $('<div>',{
-          class: 'image'
-        })
-        // Add to each pair a background-position related to the "x"nth pair they belong to
-        .css('background-position', app.fruits[x]);
-
-      // Append the 2 card faces to each main card item
-        card.append(hiddenCard);
-        card.append(visibleCard);
-
-      // Fill the array "cards" with the 28 items
-        cards.push(card);
-*/
   }
 
   getFeedbackForCard(index){
-    return 'visible';
+    return 'cache';
+  }
+
+  /*
+   arrow fx for binding
+   Gère le clic sur une carte
+   */
+  handleCardClicked = (index) => {
+    const { cards } = this.state;
+    console.log(cards[index]);
   }
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
@@ -236,7 +196,6 @@ class App extends React.Component {
               card={card}
               feedback={this.getFeedbackForCard(index)}
               index={index}
-              onClick={this.handleCardClicked}
             />
           ))}
         </main>
