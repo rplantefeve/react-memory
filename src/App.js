@@ -3,6 +3,8 @@ import './App.css';
 
 import ProgressBar from './ProgressBar';
 import Card from './Card';
+import HighScoreInput from './HighScoreInput';
+import HallOfFame from './HallOfFame';
 
 import shuffle from 'lodash.shuffle';
 
@@ -38,6 +40,10 @@ class App extends React.Component {
       currentPair: [],
       matchedPairs: [],
       timeOut: false,
+      tries: 0,
+      // tableau d'honneur à jour
+      hallOfFame: null,
+      intervalId: null,
     };
   }
 
@@ -101,11 +107,12 @@ class App extends React.Component {
   };
 
   handleNewPair(index) {
-    const { cards, currentPair, matchedPairs } = this.state;
+    const { cards, currentPair, matchedPairs, tries } = this.state;
     // nouvelle paire
     const newPair = [currentPair[0], index];
+    const newTries = tries + 1;
     // on met à jour la paire courante
-    this.setState({ currentPair: newPair });
+    this.setState({ currentPair: newPair, tries: newTries });
     // ça matche ?
     const matched = cards[newPair[0]] === cards[newPair[1]];
     if (matched) {
@@ -117,13 +124,17 @@ class App extends React.Component {
     setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS);
   }
 
+  // arrow because binding
+  displayHallOfFame = hallOfFame => {
+    this.setState({ hallOfFame: hallOfFame });
+  };
+
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
   componentDidMount() {
     // ajout d'un intervalle
     this.setState({
       intervalId: setInterval(() => {
-        const newPercentage = this.state.percentage + 10;
-        console.log(newPercentage);
+        const newPercentage = this.state.percentage + 1;
         if (newPercentage < 100) {
           this.setState(() => ({
             percentage: newPercentage,
@@ -138,7 +149,19 @@ class App extends React.Component {
 
   render() {
     // destruct
-    const { cards, percentage, timeOut } = this.state;
+    const {
+      cards,
+      percentage,
+      timeOut,
+      matchedPairs,
+      tries,
+      hallOfFame,
+      intervalId,
+    } = this.state;
+    const won = matchedPairs.length === cards.length;
+    if (won) {
+      clearInterval(intervalId);
+    }
     return (
       <>
         {timeOut && <p>Perdu !</p>}
@@ -153,7 +176,13 @@ class App extends React.Component {
             />
           ))}
         </main>
-        <ProgressBar percentage={percentage} />
+        {won &&
+          (hallOfFame ? (
+            <HallOfFame entries={hallOfFame} />
+          ) : (
+            <HighScoreInput guesses={tries} onStored={this.displayHallOfFame} />
+          ))}
+        {!won && <ProgressBar percentage={percentage} />}
       </>
     );
   }
