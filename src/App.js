@@ -29,11 +29,21 @@ const FRUITS = [
 // Size of the array of fruits
 const SIZE = 28;
 const VISUAL_PAUSE_MSECS = 750;
+// Etat initial
+const INITIAL_STATE = {
+  cards: [],
+  percentage: 0,
+  currentPair: [],
+  matchedPairs: [],
+  timeOut: false,
+  tries: 0,
+  hallOfFame: null,
+  intervalId: null,
+};
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       cards: this.generateCards(),
       percentage: 0,
@@ -41,7 +51,6 @@ class App extends React.Component {
       matchedPairs: [],
       timeOut: false,
       tries: 0,
-      // tableau d'honneur à jour
       hallOfFame: null,
       intervalId: null,
     };
@@ -129,8 +138,17 @@ class App extends React.Component {
     this.setState({ hallOfFame: hallOfFame });
   };
 
-  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-  componentDidMount() {
+  /*
+  Gérer le redémarrage d'une partie.
+  On a besoin du this dans cette fonction, donc fonction fléchée
+   */
+  handleRestart = () => {
+    this.setState({ ...INITIAL_STATE });
+    this.setState({ cards: this.generateCards() });
+    this.startClock();
+  };
+
+  startClock() {
     // ajout d'un intervalle
     this.setState({
       intervalId: setInterval(() => {
@@ -145,6 +163,11 @@ class App extends React.Component {
         }
       }, 1000),
     });
+  }
+
+  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+  componentDidMount() {
+    this.startClock();
   }
 
   render() {
@@ -179,7 +202,7 @@ class App extends React.Component {
         <div className="footer">
           {won &&
             (hallOfFame ? (
-              <HallOfFame entries={hallOfFame} />
+              <HallOfFame entries={hallOfFame} andThen={this.handleRestart} />
             ) : (
               <HighScoreInput
                 guesses={tries}

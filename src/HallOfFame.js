@@ -1,20 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Restart from './Restart';
+
 import './HallOfFame.css';
 
-const HallOfFame = ({ entries }) => (
-  <table className="hallOfFame">
-    <tbody>
-      {entries.map(({ id, guesses, date, winner }) => (
-        <tr key={id}>
-          <td className="date">{date}</td>
-          <td className="player">{winner}</td>
-          <td className="guesses">{guesses}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
+const HallOfFame = ({ entries, andThen }) => (
+  <>
+    <table className="hallOfFame">
+      <tbody>
+        {entries.map(({ id, guesses, date, winner }) => (
+          <tr key={id}>
+            <td className="date">{date}</td>
+            <td className="player">{winner}</td>
+            <td className="guesses">{guesses}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <Restart onClick={andThen} />
+  </>
 );
 
 HallOfFame.propTypes = {
@@ -26,6 +31,7 @@ HallOfFame.propTypes = {
       winner: PropTypes.string.isRequired,
     })
   ),
+  andThen: PropTypes.func.isRequired,
 };
 
 export default HallOfFame;
