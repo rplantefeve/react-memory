@@ -7,7 +7,7 @@ import Card from './Card';
 import shuffle from 'lodash.shuffle';
 
 //Array of fruits images (background-position)
-const FRUITS =   [
+const FRUITS = [
   '0 -100px',
   '0 -200px',
   '0 -300px',
@@ -29,7 +29,7 @@ const SIZE = 28;
 const VISUAL_PAUSE_MSECS = 750;
 
 class App extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -38,13 +38,13 @@ class App extends React.Component {
       currentPair: [],
       matchedPairs: [],
       timeOut: false,
-    }
+    };
   }
 
   /*
   Generate all the cards according to background positions.
    */
-  generateCards(){
+  generateCards() {
     // tableau de cartes
     const result = [];
     // taille du tableau
@@ -60,7 +60,7 @@ class App extends React.Component {
     return shuffle(result);
   }
 
-  getFeedbackForCard(index){
+  getFeedbackForCard(index) {
     const { currentPair, matchedPairs } = this.state;
     const matched = matchedPairs.includes(index);
     // si la carte est dans les cartes trouvées
@@ -68,10 +68,9 @@ class App extends React.Component {
       return 'visible';
     } else {
       // s'il elle est dans la paire courante
-      if(currentPair.includes(index)){
+      if (currentPair.includes(index)) {
         return 'visible';
-      }
-      else{
+      } else {
         return 'cache';
       }
     }
@@ -81,70 +80,68 @@ class App extends React.Component {
    arrow fx for binding
    Gère le clic sur une carte
    */
-  handleCardClicked = (index) => {
+  handleCardClicked = index => {
     const { currentPair, matchedPairs } = this.state;
     // Nous traitons que si et seulement si la carte n'est pas déjà cliquée
-    if(!(currentPair.includes(index) || matchedPairs.includes(index))){
+    if (!(currentPair.includes(index) || matchedPairs.includes(index))) {
       // si c'est le premier clic
-      if(currentPair.length === 0){
+      if (currentPair.length === 0) {
         // on ajoute la carte dans la paire courante
-        this.setState({ currentPair: [index]});
+        this.setState({ currentPair: [index] });
       } else if (currentPair.length === 1) {
         // on va déterminer si les cartes composant la paire sont identiques
         this.handleNewPair(index);
       } else {
         // ne rien faire
-        return ;
+        return;
       }
     } else {
-      return ;
+      return;
     }
-  }
+  };
 
-  handleNewPair(index){
+  handleNewPair(index) {
     const { cards, currentPair, matchedPairs } = this.state;
     // nouvelle paire
     const newPair = [currentPair[0], index];
     // on met à jour la paire courante
-    this.setState({ currentPair: newPair});
+    this.setState({ currentPair: newPair });
     // ça matche ?
     const matched = cards[newPair[0]] === cards[newPair[1]];
-    if(matched){
-      console.log('Nouvelle paire trouvée ! : ' + newPair );
+    if (matched) {
+      console.log('Nouvelle paire trouvée ! : ' + newPair);
       // ajout des position des cartes trouvées au tableau des cartes trouvées
-      this.setState({matchedPairs: [...matchedPairs, ...newPair]});
+      this.setState({ matchedPairs: [...matchedPairs, ...newPair] });
     }
     // temporisation
-    setTimeout(() => this.setState({currentPair: []}), VISUAL_PAUSE_MSECS);
+    setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS);
   }
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-  componentDidMount(){
-      // ajout d'un interval
-      this.setState({intervalId : (
-        setInterval(() => {
-          const newPercentage = this.state.percentage + 10;
-          console.log(newPercentage);
-          if(newPercentage < 100){
-            this.setState(prevState => ({
-                percentage: newPercentage
-              }))
-          } else {
-            debugger;
-            clearInterval(this.state.intervalId);
-            this.setState({ timeOut : true });
-          }
-        }, 1000)
-      )
+  componentDidMount() {
+    // ajout d'un intervalle
+    this.setState({
+      intervalId: setInterval(() => {
+        const newPercentage = this.state.percentage + 10;
+        console.log(newPercentage);
+        if (newPercentage < 100) {
+          this.setState(() => ({
+            percentage: newPercentage,
+          }));
+        } else {
+          clearInterval(this.state.intervalId);
+          this.setState({ timeOut: true });
+        }
+      }, 1000),
     });
   }
 
-  render () {
+  render() {
     // destruct
     const { cards, percentage, timeOut } = this.state;
     return (
       <>
-        { timeOut && <p>Perdu !</p> }
+        {timeOut && <p>Perdu !</p>}
         <main>
           {cards.map((position, index) => (
             <Card
@@ -158,7 +155,7 @@ class App extends React.Component {
         </main>
         <ProgressBar percentage={percentage} />
       </>
-    )
+    );
   }
 }
 

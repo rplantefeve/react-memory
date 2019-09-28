@@ -1,17 +1,14 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import './Image.css'
+import './Image.css';
 
 const Image = ({ position }) => (
-  <div
-    className='image'
-    style={{ backgroundPosition: position }}>
-  </div>
-)
+  <div className="image" style={{ backgroundPosition: position }}></div>
+);
 
 Image.propTypes = {
-  position: PropTypes.string.isRequired
-}
+  position: PropTypes.string.isRequired,
+};
 
-export default Image
+export default Image;

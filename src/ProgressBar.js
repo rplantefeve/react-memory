@@ -1,13 +1,19 @@
-import React from 'react'
-import './ProgressBar.css';
-import Filler from './Filler'
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const ProgressBar = (props) => {
+import './ProgressBar.css';
+import Filler from './Filler';
+
+const ProgressBar = props => {
   return (
     <div id="progress-bar">
-      <Filler percentage={props.percentage}/>
+      <Filler percentage={props.percentage} />
     </div>
-  )
-}
+  );
+};
 
-export default ProgressBar
+ProgressBar.propTypes = {
+  percentage: PropTypes.number.isRequired,
+};
+
+export default ProgressBar;
