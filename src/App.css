@@ -120,7 +120,7 @@ blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
+  content: '';
   content: none;
 }
 table {
@@ -169,4 +169,10 @@ main {
   max-width: 757px;
   margin: 75px auto;
   overflow: hidden;
+}
+
+footer {
+  background-color: #effeef;
+  max-width: 757px;
+  margin: 75px auto;
 }

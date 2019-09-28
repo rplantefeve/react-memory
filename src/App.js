@@ -176,12 +176,17 @@ class App extends React.Component {
             />
           ))}
         </main>
-        {won &&
-          (hallOfFame ? (
-            <HallOfFame entries={hallOfFame} />
-          ) : (
-            <HighScoreInput guesses={tries} onStored={this.displayHallOfFame} />
-          ))}
+        <div className="footer">
+          {won &&
+            (hallOfFame ? (
+              <HallOfFame entries={hallOfFame} />
+            ) : (
+              <HighScoreInput
+                guesses={tries}
+                onStored={this.displayHallOfFame}
+              />
+            ))}
+        </div>
         {!won && <ProgressBar percentage={percentage} />}
       </>
     );
