@@ -1,0 +1,7 @@
+.card,
+.card_revealed {
+  width: 100px;
+  height: 100px;
+  float: left;
+  margin: 4px;
+}
