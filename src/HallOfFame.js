@@ -7,6 +7,7 @@ import './HallOfFame.css';
 
 const HallOfFame = ({ entries, andThen }) => (
   <>
+    <p>Meilleurs scores</p>
     <table className="hallOfFame">
       <tbody>
         {entries.map(({ id, guesses, date, winner }) => (

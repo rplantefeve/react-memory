@@ -175,4 +175,10 @@ footer {
   background-color: #effeef;
   max-width: 757px;
   margin: 75px auto;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+footer > * {
+  margin: auto;
 }

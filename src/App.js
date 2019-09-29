@@ -7,6 +7,7 @@ import HighScoreInput from './HighScoreInput';
 import HallOfFame from './HallOfFame';
 import Restart from './Restart';
 import Modal from './Modal';
+import ModalWon from './ModalWon';
 
 import shuffle from 'lodash.shuffle';
 
@@ -40,7 +41,8 @@ const INITIAL_STATE = {
   tries: 0,
   hallOfFame: null,
   intervalId: null,
-  isOpen: false,
+  isLost: false,
+  isWon: true,
 };
 
 class App extends React.Component {
@@ -54,7 +56,8 @@ class App extends React.Component {
       tries: 0,
       hallOfFame: null,
       intervalId: null,
-      isOpen: false,
+      isLost: false,
+      isWon: true,
     };
   }
 
@@ -129,7 +132,10 @@ class App extends React.Component {
     if (matched) {
       console.log('Nouvelle paire trouvée ! : ' + newPair);
       // ajout des position des cartes trouvées au tableau des cartes trouvées
-      this.setState({ matchedPairs: [...matchedPairs, ...newPair] });
+      this.setState({
+        matchedPairs: [...matchedPairs, ...newPair],
+        isWon: true,
+      });
     }
     // temporisation
     setTimeout(() => this.setState({ currentPair: [] }), VISUAL_PAUSE_MSECS);
@@ -137,7 +143,7 @@ class App extends React.Component {
 
   // arrow because binding
   displayHallOfFame = hallOfFame => {
-    this.setState({ hallOfFame: hallOfFame });
+    this.setState({ hallOfFame: hallOfFame, isWon: false });
   };
 
   /*
@@ -145,9 +151,11 @@ class App extends React.Component {
   On a besoin du this dans cette fonction, donc fonction fléchée
    */
   handleRestart = () => {
+    // cacher la fenêtre modale
     this.toggleModal();
     this.setState({ ...INITIAL_STATE });
     this.setState({ cards: this.generateCards() });
+    // redémarrer le timer
     this.startClock();
   };
 
@@ -162,7 +170,7 @@ class App extends React.Component {
           }));
         } else {
           clearInterval(this.state.intervalId);
-          this.setState({ isOpen: true });
+          this.setState({ isLost: true });
         }
       }, 1000),
     });
@@ -172,7 +180,7 @@ class App extends React.Component {
   toggleModal = () => {
     // change l'état pour afficher ou cacher la fenêtre modale
     this.setState({
-      isOpen: !this.state.isOpen,
+      isLost: !this.state.isLost,
     });
   };
 
@@ -198,12 +206,21 @@ class App extends React.Component {
     return (
       <>
         <Modal
-          show={this.state.isOpen}
+          show={this.state.isLost}
           onClose={this.toggleModal}
           text="Perdu !"
         >
           <Restart onClick={this.handleRestart} />
         </Modal>
+        {won && (
+          <ModalWon
+            show={this.state.isWon}
+            onClose={this.toggleModal}
+            text="Gagné !"
+          >
+            <HighScoreInput guesses={tries} onStored={this.displayHallOfFame} />
+          </ModalWon>
+        )}
         <main>
           {cards.map((position, index) => (
             <Card
@@ -215,17 +232,11 @@ class App extends React.Component {
             />
           ))}
         </main>
-        <div className="footer">
-          {won &&
-            (hallOfFame ? (
-              <HallOfFame entries={hallOfFame} andThen={this.handleRestart} />
-            ) : (
-              <HighScoreInput
-                guesses={tries}
-                onStored={this.displayHallOfFame}
-              />
-            ))}
-        </div>
+        <footer>
+          {hallOfFame && (
+            <HallOfFame entries={hallOfFame} andThen={this.handleRestart} />
+          )}
+        </footer>
         {!won && <ProgressBar percentage={percentage} />}
       </>
     );
