@@ -5,6 +5,8 @@ import ProgressBar from './ProgressBar';
 import Card from './Card';
 import HighScoreInput from './HighScoreInput';
 import HallOfFame from './HallOfFame';
+import Restart from './Restart';
+import Modal from './Modal';
 
 import shuffle from 'lodash.shuffle';
 
@@ -35,10 +37,10 @@ const INITIAL_STATE = {
   percentage: 0,
   currentPair: [],
   matchedPairs: [],
-  timeOut: false,
   tries: 0,
   hallOfFame: null,
   intervalId: null,
+  isOpen: false,
 };
 
 class App extends React.Component {
@@ -49,10 +51,10 @@ class App extends React.Component {
       percentage: 0,
       currentPair: [],
       matchedPairs: [],
-      timeOut: false,
       tries: 0,
       hallOfFame: null,
       intervalId: null,
+      isOpen: false,
     };
   }
 
@@ -143,6 +145,7 @@ class App extends React.Component {
   On a besoin du this dans cette fonction, donc fonction fléchée
    */
   handleRestart = () => {
+    this.toggleModal();
     this.setState({ ...INITIAL_STATE });
     this.setState({ cards: this.generateCards() });
     this.startClock();
@@ -159,11 +162,19 @@ class App extends React.Component {
           }));
         } else {
           clearInterval(this.state.intervalId);
-          this.setState({ timeOut: true });
+          this.setState({ isOpen: true });
         }
       }, 1000),
     });
   }
+
+  // Arrow fx for binding
+  toggleModal = () => {
+    // change l'état pour afficher ou cacher la fenêtre modale
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  };
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
   componentDidMount() {
@@ -175,7 +186,6 @@ class App extends React.Component {
     const {
       cards,
       percentage,
-      timeOut,
       matchedPairs,
       tries,
       hallOfFame,
@@ -187,7 +197,13 @@ class App extends React.Component {
     }
     return (
       <>
-        {timeOut && <p>Perdu !</p>}
+        <Modal
+          show={this.state.isOpen}
+          onClose={this.toggleModal}
+          text="Perdu !"
+        >
+          <Restart onClick={this.handleRestart} />
+        </Modal>
         <main>
           {cards.map((position, index) => (
             <Card
