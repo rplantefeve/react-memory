@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import './Image.css';
 
 const Image = ({ position }) => (
-  <div className="image" style={{ backgroundPosition: position }}></div>
+  <div className="image" style={{ backgroundPosition: position }} />
 );
 
 Image.propTypes = {
