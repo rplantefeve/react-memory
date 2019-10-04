@@ -10,6 +10,7 @@ import Modal from './Modal';
 import ModalWon from './ModalWon';
 
 import shuffle from 'lodash.shuffle';
+import shortid from 'shortid';
 
 //Array of fruits images (background-position)
 const FRUITS = [
@@ -61,6 +62,11 @@ class App extends React.Component {
     };
   }
 
+  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+  componentDidMount() {
+    this.startClock();
+  }
+
   /*
   Generate all the cards according to background positions.
    */
@@ -73,9 +79,17 @@ class App extends React.Component {
     const candidates = shuffle(FRUITS);
     // tant que le tableau n'est pas plein
     while (result.length < size) {
-      const card = candidates.pop();
-      // insérer deux fois la carte
-      result.push(card, card);
+      const position = candidates.pop();
+      const card = {
+        card: position,
+        id: shortid.generate(),
+      };
+      const sameCard = {
+        card: position,
+        id: shortid.generate(),
+      };
+      // insérer la carte et sa jumelle (mais pas avec le même id)
+      result.push(card, sameCard);
     }
     return shuffle(result);
   }
@@ -128,9 +142,8 @@ class App extends React.Component {
     // on met à jour la paire courante
     this.setState({ currentPair: newPair, tries: newTries });
     // ça matche ?
-    const matched = cards[newPair[0]] === cards[newPair[1]];
+    const matched = cards[newPair[0]].card === cards[newPair[1]].card;
     if (matched) {
-      console.log('Nouvelle paire trouvée ! : ' + newPair);
       // ajout des position des cartes trouvées au tableau des cartes trouvées
       this.setState({
         matchedPairs: [...matchedPairs, ...newPair],
@@ -184,11 +197,6 @@ class App extends React.Component {
     });
   };
 
-  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-  componentDidMount() {
-    this.startClock();
-  }
-
   render() {
     // destruct
     const {
@@ -205,6 +213,9 @@ class App extends React.Component {
     }
     return (
       <>
+        <header>
+          <h1>React Memory</h1>
+        </header>
         <Modal
           show={this.state.isLost}
           onClose={this.toggleModal}
@@ -222,10 +233,10 @@ class App extends React.Component {
           </ModalWon>
         )}
         <main>
-          {cards.map((position, index) => (
+          {cards.map((card, index) => (
             <Card
-              key={index}
-              position={position}
+              key={card.id}
+              position={card.card}
               feedback={this.getFeedbackForCard(index)}
               index={index}
               onClick={this.handleCardClicked}
