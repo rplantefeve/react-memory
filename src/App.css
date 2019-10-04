@@ -162,6 +162,12 @@ header {
 
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+h1 {
+  margin: auto;
 }
 
 main {

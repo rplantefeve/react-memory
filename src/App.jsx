@@ -213,6 +213,9 @@ class App extends React.Component {
     }
     return (
       <>
+        <header>
+          <h1>React Memory</h1>
+        </header>
         <Modal
           show={this.state.isLost}
           onClose={this.toggleModal}
