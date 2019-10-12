@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/react-memory/static/css/main.c5e4e079.chunk.css",
+    "main.js": "/react-memory/static/js/main.c7274b94.chunk.js",
+    "main.js.map": "/react-memory/static/js/main.c7274b94.chunk.js.map",
+    "runtime-main.js": "/react-memory/static/js/runtime-main.1bb98255.js",
+    "runtime-main.js.map": "/react-memory/static/js/runtime-main.1bb98255.js.map",
+    "static/js/2.4bea5fa3.chunk.js": "/react-memory/static/js/2.4bea5fa3.chunk.js",
+    "static/js/2.4bea5fa3.chunk.js.map": "/react-memory/static/js/2.4bea5fa3.chunk.js.map",
+    "index.html": "/react-memory/index.html",
+    "precache-manifest.bd4d75d8850356e405276c9c25aa9781.js": "/react-memory/precache-manifest.bd4d75d8850356e405276c9c25aa9781.js",
+    "service-worker.js": "/react-memory/service-worker.js",
+    "static/css/main.c5e4e079.chunk.css.map": "/react-memory/static/css/main.c5e4e079.chunk.css.map",
+    "static/media/Image.css": "/react-memory/static/media/cards.d4e439c9.png",
+    "static/media/happy_face.png": "/react-memory/static/media/happy_face.1fb01699.png"
+  }
+}
